@@ -1,7 +1,8 @@
 package com.guilhermealbm.sbcratingcalculator.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 
 class SBCRatingCalculatorViewModel : ViewModel() {
-    val playersByRating: HashMap<Int, Int> = TODO()
+    val playersByRating: LiveData<HashMap<Int, Int>> = TODO()
 }

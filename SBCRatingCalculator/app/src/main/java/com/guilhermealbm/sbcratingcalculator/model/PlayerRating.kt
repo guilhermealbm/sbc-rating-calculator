@@ -1,8 +1,12 @@
 package com.guilhermealbm.sbcratingcalculator.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class PlayerRating(
-    val rating: Int,
-    val players: Int
+    @PrimaryKey private val rating: Int,
+    private val players: Int
 )
 
 class PlayerRatingBuilder {

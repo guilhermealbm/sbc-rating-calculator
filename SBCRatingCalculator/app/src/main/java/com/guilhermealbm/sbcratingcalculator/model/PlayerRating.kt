@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PlayerRating(
-    @PrimaryKey private val rating: Int,
-    private val players: Int
+    @PrimaryKey val rating: Int,
+    val players: Int
 )
 
 class PlayerRatingBuilder {

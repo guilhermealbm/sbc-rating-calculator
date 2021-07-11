@@ -28,10 +28,30 @@ class SBCRatingCalculatorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        player_rating_selector_list_view.adapter = PlayerRatingAdapter(createRatings())
         player_rating_selector_list_view.layoutManager = LinearLayoutManager(context)
         viewModel.playersByRating.observe(viewLifecycleOwner) {
-            // update UI
+            if (it.size != 30) {
+                val newList = createRatings()
+                newList.forEach { threePositionList ->
+                    run {
+                        threePositionList.forEach { playerRating ->
+                            run {
+                                viewModel.savePlayerRatingDb(playerRating)
+                            }
+                        }
+                    }
+                }
+
+            } else {
+                val playersArray = Array(10) { i ->
+                    arrayOf(
+                        it[i],
+                        it[i + 10],
+                        it[i + 20]
+                    )
+                }
+                player_rating_selector_list_view.adapter = PlayerRatingAdapter(playersArray)
+            }
         }
     }
 

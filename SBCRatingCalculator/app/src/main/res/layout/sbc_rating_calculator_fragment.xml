@@ -25,7 +25,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sbc_rating_selector"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:spanCount="3"
+            android:orientation="horizontal"
+            app:spanCount="10"
             tools:listitem="@layout/player_rating_selector"
             />
 

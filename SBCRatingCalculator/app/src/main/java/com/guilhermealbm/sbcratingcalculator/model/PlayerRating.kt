@@ -18,19 +18,9 @@ class PlayerRatingBuilder {
 
 fun playerRating(block: PlayerRatingBuilder.() -> Unit): PlayerRating = PlayerRatingBuilder().apply(block).build()
 
-fun createRatings() = Array(10) { i ->
-    arrayOf(
-        playerRating {
-            rating = 70 + i
-            players = 0
-        },
-        playerRating {
-            rating = 80 + i
-            players = 0
-        },
-        playerRating {
-            rating = 90 + i
-            players = 0
-        }
-    )
+fun createRatings() = Array(30) { i ->
+    playerRating {
+        rating = 70 + i
+        players = 0
+    }
 }

@@ -12,6 +12,9 @@ interface PlayerRatingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(playerRating: PlayerRating)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAll(playerRatings: List<PlayerRating>)
+
     @Query("SELECT * FROM playerRating")
     fun load(): Flow<List<PlayerRating>>
 }

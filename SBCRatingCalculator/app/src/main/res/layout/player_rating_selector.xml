@@ -6,8 +6,13 @@
 
     <data>
         <variable
-            name="clickListener"
+            name="clickListenerPlus"
             type="android.view.View.OnClickListener"/>
+
+        <variable
+            name="clickListenerMinus"
+            type="android.view.View.OnClickListener"/>
+
         <variable
             name="playerRating"
             type="com.guilhermealbm.sbcratingcalculator.model.PlayerRating"/>
@@ -21,6 +26,7 @@
         <Button
             android:id="@+id/sub_btn"
             android:text="@string/sub_btn"
+            android:onClick="@{clickListenerMinus}"
             android:layout_width="36dp"
             android:layout_height="36dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +37,8 @@
             android:id="@+id/player_rating_text"
             tools:text="0 x 84"
             android:text="@{playerRating.players + ` x ` + playerRating.rating}"
-            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/sub_btn"
             app:layout_constraintBottom_toBottomOf="@id/sub_btn"
@@ -43,7 +50,7 @@
         <Button
             android:id="@+id/add_btn"
             android:text="@string/add_btn"
-            android:onClick="@{clickListener}"
+            android:onClick="@{clickListenerPlus}"
             android:layout_width="36dp"
             android:layout_height="36dp"
             app:layout_constraintStart_toEndOf="@id/player_rating_text"

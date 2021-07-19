@@ -16,7 +16,8 @@ class PlayerRatingAdapter : ListAdapter<PlayerRating, RecyclerView.ViewHolder>(P
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            this
         )
     }
 
@@ -27,13 +28,35 @@ class PlayerRatingAdapter : ListAdapter<PlayerRating, RecyclerView.ViewHolder>(P
 
 
     class PlayerRatingViewHolder(
-        private val binding: PlayerRatingSelectorBinding
+        private val binding: PlayerRatingSelectorBinding,
+        private val adapter: PlayerRatingAdapter
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.setClickListener {
-                binding.playerRating?.let { playerRating ->
-                    println("testando..." + playerRating.players + "  " + playerRating.rating)
+            binding.setClickListenerPlus {
+                if (binding.playerRating!!.players + 1 > 11)
+                    return@setClickListenerPlus
+
+                val newPlayerRating = PlayerRating(binding.playerRating!!.rating, binding.playerRating!!.players + 1)
+                val currentList = adapter.currentList.toMutableList()
+                val index = currentList.indexOf(binding.playerRating)
+                if (index != -1) {
+                    currentList.remove(binding.playerRating)
+                    currentList.add(index, newPlayerRating)
+                    adapter.submitList(currentList)
+                }
+            }
+            binding.setClickListenerMinus {
+                if (binding.playerRating!!.players -1 < 0)
+                    return@setClickListenerMinus
+
+                val newPlayerRating = PlayerRating(binding.playerRating!!.rating, binding.playerRating!!.players - 1)
+                val currentList = adapter.currentList.toMutableList()
+                val index = currentList.indexOf(binding.playerRating)
+                if (index != -1) {
+                    currentList.remove(binding.playerRating)
+                    currentList.add(index, newPlayerRating)
+                    adapter.submitList(currentList)
                 }
             }
         }

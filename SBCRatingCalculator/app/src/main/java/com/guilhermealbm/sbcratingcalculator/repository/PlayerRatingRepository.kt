@@ -10,6 +10,6 @@ class PlayerRatingRepository @Inject constructor(private val playerRatingDao: Pl
 
     fun getPlayersRating() = playerRatingDao.load()
 
-    suspend fun savePlayerRating(rating: Int, players: Int) = playerRatingDao.save(playerRating = PlayerRating(rating, players))
+    suspend fun savePlayerRatings(playerRatings: List<PlayerRating>) = playerRatingDao.saveAll(playerRatings)
 
 }

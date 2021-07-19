@@ -14,9 +14,9 @@ class SBCRatingCalculatorViewModel @Inject constructor (
 
     val playersByRating = playerRatingRepository.getPlayersRating().asLiveData()
 
-    fun savePlayerRatingDb(playerRating: PlayerRating) {
+    fun savePlayersRatingDb(playerRatings: List<PlayerRating>) {
         viewModelScope.launch {
-            playerRatingRepository.savePlayerRating(playerRating.rating, playerRating.players)
+            playerRatingRepository.savePlayerRatings(playerRatings)
         }
     }
 }

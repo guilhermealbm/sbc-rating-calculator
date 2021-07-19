@@ -29,6 +29,10 @@ class SBCRatingCalculatorFragment : Fragment() {
         binding.playerRatingSelectorListView.adapter = adapter
         subscribeUi(adapter)
 
+        binding.calculateButton.setOnClickListener {
+            updateData(adapter)
+        }
+
         return binding.root
     }
 
@@ -36,5 +40,12 @@ class SBCRatingCalculatorFragment : Fragment() {
         viewModel.playersByRating.observe(viewLifecycleOwner) { players ->
             adapter.submitList(players)
         }
+    }
+
+    private fun updateData(adapter: PlayerRatingAdapter) {
+        with(viewModel) {
+            viewModel.savePlayersRatingDb(adapter.currentList)
+        }
+        // Calculate
     }
 }

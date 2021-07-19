@@ -13,3 +13,5 @@ fun calculateSquadRating(players: List<PlayerRating>) : Int {
 fun getSquadSum(players: List<PlayerRating>) = players.map { p -> p.players * p.rating }.sum()
 
 fun getCF(players: List<PlayerRating>, avg: Double) = players.filter { p -> p.rating > avg }.map { p -> p.players * p.rating - p.players * avg}.sum()
+
+fun getPlayersNum(players: List<PlayerRating>) = players.map { p -> p.players }.sum()

@@ -44,8 +44,8 @@ class SBCRatingCalculatorFragment : Fragment() {
 
     private fun updateData(adapter: PlayerRatingAdapter) {
         with(viewModel) {
-            viewModel.savePlayersRatingDb(adapter.currentList)
+            println(getSquadRating(adapter.currentList))
+            savePlayersRatingDb(adapter.currentList)
         }
-        // Calculate
     }
 }

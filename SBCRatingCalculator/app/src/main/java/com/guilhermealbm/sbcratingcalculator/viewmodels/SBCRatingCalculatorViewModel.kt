@@ -3,6 +3,7 @@ package com.guilhermealbm.sbcratingcalculator.viewmodels
 import androidx.lifecycle.*
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.repository.PlayerRatingRepository
+import com.guilhermealbm.sbcratingcalculator.util.calculateSquadRating
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,4 +20,7 @@ class SBCRatingCalculatorViewModel @Inject constructor (
             playerRatingRepository.savePlayerRatings(playerRatings)
         }
     }
+
+    fun getSquadRating(players: List<PlayerRating>) = calculateSquadRating(players)
+
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SBCRatingCalculator</string>
     <string name="select_sbc_rating">Select SBC Rating</string>
+    <string name="calculate">Calculate</string>
     <string name="sub_btn">-</string>
     <string name="add_btn">+</string>
 </resources>

@@ -51,10 +51,9 @@ class SBCRatingCalculatorFragment : Fragment() {
     private fun updateData(adapter: PlayerRatingAdapter, resultText: TextView) {
         with(viewModel) {
             val playersList = adapter.currentList
-            val result = getSquadRating(playersList)
-            when {
-                result == MISSING_PLAYERS -> resultText.text = resources.getString(R.string.missing_players_message)
-                result == TOO_MANY_PLAYERS -> resultText.text = resources.getString(R.string.too_many_players_message)
+            when (val result = getSquadRating(playersList)) {
+                MISSING_PLAYERS -> resultText.text = resources.getString(R.string.missing_players_message)
+                TOO_MANY_PLAYERS -> resultText.text = resources.getString(R.string.too_many_players_message)
                 else -> resultText.text = resources.getString(R.string.result_message, result)
             }
             savePlayersRatingDb(playersList)

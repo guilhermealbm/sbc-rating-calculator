@@ -3,6 +3,8 @@ package com.guilhermealbm.sbcratingcalculator.viewmodels
 import androidx.lifecycle.*
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.repository.PlayerRatingRepository
+import com.guilhermealbm.sbcratingcalculator.util.MISSING_PLAYERS
+import com.guilhermealbm.sbcratingcalculator.util.TOO_MANY_PLAYERS
 import com.guilhermealbm.sbcratingcalculator.util.calculateSquadRating
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,6 +23,13 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         }
     }
 
-    fun getSquadRating(players: List<PlayerRating>) = calculateSquadRating(players)
+    fun getSquadRating(players: List<PlayerRating>) : Int {
+        val playersNum = players.map { p -> p.players }.sum()
+        return when {
+            playersNum < 11 -> MISSING_PLAYERS
+            playersNum == 11 -> calculateSquadRating(players)
+            else -> TOO_MANY_PLAYERS
+        }
+    }
 
 }

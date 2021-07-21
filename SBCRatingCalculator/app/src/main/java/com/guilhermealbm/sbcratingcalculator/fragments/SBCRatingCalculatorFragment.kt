@@ -11,7 +11,8 @@ import com.guilhermealbm.sbcratingcalculator.R
 import com.guilhermealbm.sbcratingcalculator.viewmodels.SBCRatingCalculatorViewModel
 import com.guilhermealbm.sbcratingcalculator.adapters.PlayerRatingAdapter
 import com.guilhermealbm.sbcratingcalculator.databinding.SbcRatingCalculatorFragmentBinding
-import com.guilhermealbm.sbcratingcalculator.util.getPlayersNum
+import com.guilhermealbm.sbcratingcalculator.util.MISSING_PLAYERS
+import com.guilhermealbm.sbcratingcalculator.util.TOO_MANY_PLAYERS
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,11 +51,11 @@ class SBCRatingCalculatorFragment : Fragment() {
     private fun updateData(adapter: PlayerRatingAdapter, resultText: TextView) {
         with(viewModel) {
             val playersList = adapter.currentList
-            val playersNum = getPlayersNum(playersList)
+            val result = getSquadRating(playersList)
             when {
-                playersNum < 11 -> resultText.text = resources.getString(R.string.missing_players_message)
-                playersNum == 11 -> resultText.text = resources.getString(R.string.result_message, getSquadRating(playersList))
-                playersNum > 11 -> resultText.text = resources.getString(R.string.too_many_players_message)
+                result == MISSING_PLAYERS -> resultText.text = resources.getString(R.string.missing_players_message)
+                result == TOO_MANY_PLAYERS -> resultText.text = resources.getString(R.string.too_many_players_message)
+                else -> resultText.text = resources.getString(R.string.result_message, result)
             }
             savePlayersRatingDb(playersList)
         }

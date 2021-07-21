@@ -1,8 +1,7 @@
-package com.guilhermealbm.sbcratingcalculator.utils
+package com.guilhermealbm.sbcratingcalculator.util
 
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.model.playerRating
-import com.guilhermealbm.sbcratingcalculator.util.calculateSquadRating
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertEquals
@@ -21,6 +20,7 @@ class SBCRatingOperationsTest {
         }.toList() as ArrayList<PlayerRating>
     }
 
+    //https://www.futbin.com/sbc-rating-combinations?rating=83
     @Test
     fun testCalculateSquadRating83() {
         val players83 = playerRating {

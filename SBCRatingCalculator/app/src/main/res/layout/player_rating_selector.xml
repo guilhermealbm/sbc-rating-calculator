@@ -39,10 +39,10 @@
 
         <TextView
             android:id="@+id/player_rating_text"
-            tools:text="0 x 84"
+            tools:text="10 x 84"
             android:text="@{playerRating.players + ` x ` + playerRating.rating}"
             android:textAlignment="center"
-            android:layout_width="60dp"
+            android:layout_width="72dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/sub_btn"
             app:layout_constraintBottom_toBottomOf="@id/sub_btn"

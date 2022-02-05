@@ -2,6 +2,7 @@
     <string name="app_name">SBCRatingCalculator</string>
     <string name="select_sbc_rating">Select SBC Rating</string>
     <string name="calculate">Calculate</string>
+    <string name="clear">Clear</string>
     <string name="too_many_players_message">Too many players. Please add a maximum of 11 players.</string>
     <string name="missing_players_message">Few players. Please add a minimum of 11 players.</string>
     <string name="result_message">Your SBC rating is: %1$d.</string>

@@ -2,6 +2,7 @@ package com.guilhermealbm.sbcratingcalculator.viewmodels
 
 import androidx.lifecycle.*
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
+import com.guilhermealbm.sbcratingcalculator.model.createRatings
 import com.guilhermealbm.sbcratingcalculator.repository.PlayerRatingRepository
 import com.guilhermealbm.sbcratingcalculator.util.MISSING_PLAYERS
 import com.guilhermealbm.sbcratingcalculator.util.TOO_MANY_PLAYERS
@@ -31,5 +32,7 @@ class SBCRatingCalculatorViewModel @Inject constructor (
             else -> TOO_MANY_PLAYERS
         }
     }
+
+    fun clearData() = savePlayersRatingDb(createRatings().toList())
 
 }

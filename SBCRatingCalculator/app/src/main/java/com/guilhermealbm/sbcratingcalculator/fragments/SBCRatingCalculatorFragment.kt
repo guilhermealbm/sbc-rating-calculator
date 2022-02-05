@@ -39,6 +39,10 @@ class SBCRatingCalculatorFragment : Fragment() {
             updateData(adapter, resultText)
         }
 
+        binding.clearButton.setOnClickListener {
+            clearData()
+        }
+
         return binding.root
     }
 
@@ -59,4 +63,6 @@ class SBCRatingCalculatorFragment : Fragment() {
             savePlayersRatingDb(playersList)
         }
     }
+
+    private fun clearData() = viewModel.clearData()
 }

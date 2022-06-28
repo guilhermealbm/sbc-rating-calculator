@@ -20,9 +20,13 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     private val _playersByRating = MutableLiveData<List<PlayerRating>>()
     val playersByRating: LiveData<List<PlayerRating>?> = _playersByRating
 
+    private val _totalPlayers = MutableLiveData<Int>()
+    val totalPlayers: LiveData<Int> = _totalPlayers
+
     init {
         viewModelScope.launch {
             _playersByRating.value = playerRatingRepository.getPlayersRating().first()
+            _totalPlayers.value = _playersByRating.value?.sumOf { it.players }
         }
     }
 
@@ -35,10 +39,18 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     fun updatePlayerInList(playerRating: PlayerRating, add: Boolean = true) {
         val index = _playersByRating.value?.indexOf(playerRating) ?: 0
 
+        if (!add && playerRating.players == 0)
+            return
+
         val newPlayerRating: PlayerRating = if (add)
             PlayerRating(playerRating.rating, playerRating.players + 1)
         else
             PlayerRating(playerRating.rating, playerRating.players - 1)
+
+        _totalPlayers.value = if (add)
+             _totalPlayers.value?.plus(1)
+            else
+            _totalPlayers.value?.minus(1)
 
         val newList = _playersByRating.value?.toMutableList()
         newList?.set(index, newPlayerRating)
@@ -46,7 +58,7 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     }
 
     fun getSquadRating(players: List<PlayerRating>) : Int {
-        val playersNum = players.sumOf { p -> p.players }
+        val playersNum = players.sumOf { it.players }
         return when {
             playersNum < 11 -> MISSING_PLAYERS
             playersNum == 11 -> calculateSquadRating(players)

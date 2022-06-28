@@ -27,6 +27,8 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     init {
         viewModelScope.launch {
             _playersByRating.value = playerRatingRepository.getPlayersRating().first()
+            if (_playersByRating.value?.isEmpty() == true)
+                _playersByRating.value = createRatings().toList()
             _totalPlayers.value = _playersByRating.value?.sumOf { it.players }
             if (_totalPlayers.value == 11) {
                 _playersByRating.value?.let {

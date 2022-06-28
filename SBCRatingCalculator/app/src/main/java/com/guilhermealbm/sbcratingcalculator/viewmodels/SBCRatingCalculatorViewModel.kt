@@ -4,8 +4,6 @@ import androidx.lifecycle.*
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.model.createRatings
 import com.guilhermealbm.sbcratingcalculator.repository.PlayerRatingRepository
-import com.guilhermealbm.sbcratingcalculator.util.MISSING_PLAYERS
-import com.guilhermealbm.sbcratingcalculator.util.TOO_MANY_PLAYERS
 import com.guilhermealbm.sbcratingcalculator.util.calculateSquadRating
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
@@ -23,10 +21,18 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     private val _totalPlayers = MutableLiveData<Int>()
     val totalPlayers: LiveData<Int> = _totalPlayers
 
+    private val _teamRating = MutableLiveData<Int?>()
+    val teamRating: LiveData<Int?> = _teamRating
+
     init {
         viewModelScope.launch {
             _playersByRating.value = playerRatingRepository.getPlayersRating().first()
             _totalPlayers.value = _playersByRating.value?.sumOf { it.players }
+            if (_totalPlayers.value == 11) {
+                _playersByRating.value?.let {
+                    _teamRating.value = calculateSquadRating(it)
+                }
+            }
         }
     }
 
@@ -55,15 +61,15 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         val newList = _playersByRating.value?.toMutableList()
         newList?.set(index, newPlayerRating)
         _playersByRating.value = newList
-    }
 
-    fun getSquadRating(players: List<PlayerRating>) : Int {
-        val playersNum = players.sumOf { it.players }
-        return when {
-            playersNum < 11 -> MISSING_PLAYERS
-            playersNum == 11 -> calculateSquadRating(players)
-            else -> TOO_MANY_PLAYERS
+        if (_totalPlayers.value == 11) {
+            _playersByRating.value?.let {
+                _teamRating.value = calculateSquadRating(it)
+            }
+        } else {
+            _teamRating.value = null
         }
+
     }
 
     fun clearData() = savePlayersRatingDb(createRatings().toList())

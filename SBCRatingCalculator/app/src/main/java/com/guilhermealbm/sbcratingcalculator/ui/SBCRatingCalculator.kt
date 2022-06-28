@@ -25,7 +25,7 @@ fun SBCRatingCalculator(viewModel: SBCRatingCalculatorViewModel = viewModel()) {
     val playerRatingsList: List<PlayerRating>? by viewModel.playersByRating.observeAsState()
     val totalPlayers: Int? by viewModel.totalPlayers.observeAsState()
     val teamRating: Int? by viewModel.teamRating.observeAsState()
-    SBCRatingCalculatorList(
+    SBCRatingCalculatorScreen(
         playerRatingsList,
         totalPlayers,
         teamRating,
@@ -36,7 +36,7 @@ fun SBCRatingCalculator(viewModel: SBCRatingCalculatorViewModel = viewModel()) {
 }
 
 @Composable
-fun SBCRatingCalculatorList(
+fun SBCRatingCalculatorScreen(
     playerRatingsList: List<PlayerRating>?,
     totalPlayers: Int?,
     teamRating: Int?,
@@ -45,55 +45,58 @@ fun SBCRatingCalculatorList(
     onClearData: () -> Unit
 ) {
     Scaffold {
-        Column(
+        Column (
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "SBC Rating Calculator",
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(16.dp)
+            SBCRatingCalculatorHeader()
+            Row(
+                modifier = Modifier.weight(1f)
+            ) {
+                SBCRatingCalculatorList(
+                    playerRatingsList = playerRatingsList,
+                    onRemovePlayer = onRemovePlayer,
+                    onAddPlayer = onAddPlayer
+                )
+            }
+            SBCRatingCalculatorInfo(
+                totalPlayers = totalPlayers,
+                teamRating = teamRating,
+                onClearData = onClearData
             )
+        }
+    }
+}
 
-            LazyHorizontalGrid(
-                modifier = Modifier
-                    .weight(1f),
-                rows = GridCells.Fixed(10),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                userScrollEnabled = false
-            ) {
-                playerRatingsList?.let {
-                    items(it) { playerRating ->
-                        PlayerRatingSelector(
-                            playerRating = playerRating,
-                            onRemovePlayer = onRemovePlayer,
-                            onAddPlayer = onAddPlayer
-                        )
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            teamRating?.let { 
-                Text(
-                    modifier = Modifier.height(20.dp),
-                    text = "O rating de seu squad é: $teamRating"
+@Composable
+fun SBCRatingCalculatorHeader() {
+    Text(
+        text = "SBC Rating Calculator",
+        style = MaterialTheme.typography.h6,
+        modifier = Modifier.padding(16.dp)
+    )
+}
+
+@Composable
+fun SBCRatingCalculatorList(
+    playerRatingsList: List<PlayerRating>?,
+    onRemovePlayer: (PlayerRating) -> Unit,
+    onAddPlayer: (PlayerRating) -> Unit,
+) {
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(10),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        userScrollEnabled = false
+    ) {
+        playerRatingsList?.let {
+            items(it) { playerRating ->
+                PlayerRatingSelector(
+                    playerRating = playerRating,
+                    onRemovePlayer = onRemovePlayer,
+                    onAddPlayer = onAddPlayer
                 )
-            } ?: run {
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-            totalPlayers?.let {
-                Text(
-                    text = "Número de jogadores adicionados: $totalPlayers",
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
-                )
-            }
-            Button(
-                onClick = onClearData,
-                modifier = Modifier.padding(bottom = 40.dp)
-            ) {
-                Text(text = "Limpar dados")
             }
         }
     }
@@ -118,10 +121,57 @@ private fun PlayerRatingSelector(
     }
 }
 
+@Composable
+fun SBCRatingCalculatorInfo(
+    totalPlayers: Int?,
+    teamRating: Int?,
+    onClearData: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+        teamRating?.let {
+            Text(
+                modifier = Modifier.height(20.dp),
+                text = "O rating de seu squad é: $teamRating"
+            )
+        } ?: run {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        totalPlayers?.let {
+            Text(
+                text = "Número de jogadores adicionados: $totalPlayers",
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+            )
+        }
+        Button(
+            onClick = onClearData,
+            modifier = Modifier.padding(bottom = 40.dp)
+        ) {
+            Text(text = "Limpar dados")
+        }
+    }
+}
+
 @Preview(name = "SBCRatingCalculator")
 @Composable
 private fun SBCRatingCalculatorPreview() {
-    SBCRatingCalculatorList(createRatings().toList(), 11, 82, {}, {}, {})
+    SBCRatingCalculatorScreen(createRatings().toList(), 11, 82, {}, {}, {})
+}
+
+@Preview(name = "SBCRatingCalculatorList")
+@Composable
+private fun SBCRatingCalculatorListPreview() {
+    SBCRatingCalculatorList(createRatings().toList(), {}, {})
+}
+
+@Preview(name = "SBCRatingCalculatorInfo")
+@Composable
+private fun SBCRatingCalculatorInfoPreview() {
+    SBCRatingCalculatorInfo(11, 82) {}
 }
 
 @Preview(name = "PlayerRatingSelector")

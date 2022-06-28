@@ -17,15 +17,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
+import com.guilhermealbm.sbcratingcalculator.model.createRatings
 import com.guilhermealbm.sbcratingcalculator.viewmodels.SBCRatingCalculatorViewModel
 
 @Composable
 fun SBCRatingCalculator(viewModel: SBCRatingCalculatorViewModel = viewModel()) {
     val playerRatingsList: List<PlayerRating>? by viewModel.playersByRating.observeAsState()
     val totalPlayers: Int? by viewModel.totalPlayers.observeAsState()
+    val teamRating: Int? by viewModel.teamRating.observeAsState()
     SBCRatingCalculatorList(
         playerRatingsList,
         totalPlayers,
+        teamRating,
         onRemovePlayer = { viewModel.updatePlayerInList(it, false) },
         onAddPlayer = { viewModel.updatePlayerInList(it, true) }
     )
@@ -35,12 +38,15 @@ fun SBCRatingCalculator(viewModel: SBCRatingCalculatorViewModel = viewModel()) {
 fun SBCRatingCalculatorList(
     playerRatingsList: List<PlayerRating>?,
     totalPlayers: Int?,
+    teamRating: Int?,
     onRemovePlayer: (PlayerRating) -> Unit,
     onAddPlayer: (PlayerRating) -> Unit
 ) {
     Scaffold {
         Column(
-            modifier = Modifier.padding(8.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -65,6 +71,15 @@ fun SBCRatingCalculatorList(
                         )
                     }
                 }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            teamRating?.let { 
+                Text(
+                    modifier = Modifier.height(20.dp),
+                    text = "O rating de seu squad é: $teamRating"
+                )
+            } ?: run {
+                Spacer(modifier = Modifier.height(20.dp))
             }
             totalPlayers?.let {
                 Text(
@@ -98,25 +113,14 @@ private fun PlayerRatingSelector(
 @Preview(name = "SBCRatingCalculator")
 @Composable
 private fun SBCRatingCalculatorPreview() {
-    val playerRatings = listOf(
-        PlayerRating(80, 1),
-        PlayerRating(81, 2),
-        PlayerRating(82, 3),
-        PlayerRating(83, 5),
-        PlayerRating(84, 0)
-    )
-    SBCRatingCalculatorList(playerRatings, 11, {}, {})
+    SBCRatingCalculatorList(createRatings().toList(), 11, 82, {}, {})
 }
 
 @Preview(name = "PlayerRatingSelector")
 @Composable
 private fun PlayerRatingSelectorPreview() {
-    val playerRatings = listOf(
-        PlayerRating(80, 1),
-        PlayerRating(81, 2),
-        PlayerRating(82, 3),
-        PlayerRating(83, 5),
-        PlayerRating(84, 0)
-    )
-    PlayerRatingSelector(playerRatings.first(), {}, {})
+    val playerRating = PlayerRating(80, 1)
+    Surface {
+        PlayerRatingSelector(playerRating, {}, {})
+    }
 }

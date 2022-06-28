@@ -13,9 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.guilhermealbm.sbcratingcalculator.R
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.model.createRatings
 import com.guilhermealbm.sbcratingcalculator.viewmodels.SBCRatingCalculatorViewModel
@@ -73,7 +75,7 @@ fun SBCRatingCalculatorScreen(
 @Composable
 fun SBCRatingCalculatorHeader() {
     Text(
-        text = "SBC Rating Calculator",
+        text = stringResource(id = R.string.heading),
         style = MaterialTheme.typography.h6,
         modifier = Modifier.padding(16.dp)
     )
@@ -136,14 +138,14 @@ fun SBCRatingCalculatorInfo(
         teamRating?.let {
             Text(
                 modifier = Modifier.height(20.dp),
-                text = "O rating de seu squad é: $teamRating"
+                text = stringResource(id = R.string.result_message, teamRating)
             )
         } ?: run {
             Spacer(modifier = Modifier.height(20.dp))
         }
         totalPlayers?.let {
             Text(
-                text = "Número de jogadores adicionados: $totalPlayers",
+                text = stringResource(id = R.string.added_players, totalPlayers),
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
             )
         }
@@ -151,7 +153,7 @@ fun SBCRatingCalculatorInfo(
             onClick = onClearData,
             modifier = Modifier.padding(bottom = 40.dp)
         ) {
-            Text(text = "Limpar dados")
+            Text(text = stringResource(id = R.string.clear))
         }
     }
 }

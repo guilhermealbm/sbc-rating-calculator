@@ -30,7 +30,8 @@ fun SBCRatingCalculator(viewModel: SBCRatingCalculatorViewModel = viewModel()) {
         totalPlayers,
         teamRating,
         onRemovePlayer = { viewModel.updatePlayerInList(it, false) },
-        onAddPlayer = { viewModel.updatePlayerInList(it, true) }
+        onAddPlayer = { viewModel.updatePlayerInList(it, true) },
+        onClearData = { viewModel.clearData() }
     )
 }
 
@@ -40,7 +41,8 @@ fun SBCRatingCalculatorList(
     totalPlayers: Int?,
     teamRating: Int?,
     onRemovePlayer: (PlayerRating) -> Unit,
-    onAddPlayer: (PlayerRating) -> Unit
+    onAddPlayer: (PlayerRating) -> Unit,
+    onClearData: () -> Unit
 ) {
     Scaffold {
         Column(
@@ -84,8 +86,14 @@ fun SBCRatingCalculatorList(
             totalPlayers?.let {
                 Text(
                     text = "Número de jogadores adicionados: $totalPlayers",
-                    modifier = Modifier.padding(top = 16.dp, bottom = 40.dp)
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
                 )
+            }
+            Button(
+                onClick = onClearData,
+                modifier = Modifier.padding(bottom = 40.dp)
+            ) {
+                Text(text = "Limpar dados")
             }
         }
     }
@@ -113,7 +121,7 @@ private fun PlayerRatingSelector(
 @Preview(name = "SBCRatingCalculator")
 @Composable
 private fun SBCRatingCalculatorPreview() {
-    SBCRatingCalculatorList(createRatings().toList(), 11, 82, {}, {})
+    SBCRatingCalculatorList(createRatings().toList(), 11, 82, {}, {}, {})
 }
 
 @Preview(name = "PlayerRatingSelector")

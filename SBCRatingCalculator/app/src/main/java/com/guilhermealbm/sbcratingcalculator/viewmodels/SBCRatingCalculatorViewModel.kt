@@ -74,6 +74,10 @@ class SBCRatingCalculatorViewModel @Inject constructor (
 
     }
 
-    fun clearData() = savePlayersRatingDb(createRatings().toList())
+    fun clearData() {
+        _playersByRating.value = createRatings().toList()
+        _totalPlayers.value = 0
+        _teamRating.value = null
+    }
 
 }

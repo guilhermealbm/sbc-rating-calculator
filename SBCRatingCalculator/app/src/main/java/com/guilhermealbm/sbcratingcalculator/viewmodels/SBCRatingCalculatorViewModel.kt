@@ -29,7 +29,9 @@ class SBCRatingCalculatorViewModel @Inject constructor (
             _playersByRating.value = playerRatingRepository.getPlayersRating().first()
             if (_playersByRating.value?.isEmpty() == true)
                 _playersByRating.value = createRatings().toList()
+
             _totalPlayers.value = _playersByRating.value?.sumOf { it.players }
+
             if (_totalPlayers.value == 11) {
                 _playersByRating.value?.let {
                     _teamRating.value = calculateSquadRating(it)
@@ -44,9 +46,8 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         }
     }
 
-    fun updatePlayerInList(playerRating: PlayerRating, add: Boolean = true) {
+    fun updatePlayerInList(playerRating: PlayerRating, add: Boolean) {
         val index = _playersByRating.value?.indexOf(playerRating) ?: 0
-
         if (!add && playerRating.players == 0)
             return
 
@@ -55,15 +56,23 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         else
             PlayerRating(playerRating.rating, playerRating.players - 1)
 
-        _totalPlayers.value = if (add)
-             _totalPlayers.value?.plus(1)
-            else
-            _totalPlayers.value?.minus(1)
+        updateTotalPlayers(add)
 
         val newList = _playersByRating.value?.toMutableList()
         newList?.set(index, newPlayerRating)
         _playersByRating.value = newList
 
+        updateTeamRating()
+    }
+
+    private fun updateTotalPlayers(add: Boolean) {
+        _totalPlayers.value = if (add)
+            _totalPlayers.value?.plus(1)
+        else
+            _totalPlayers.value?.minus(1)
+    }
+
+    private fun updateTeamRating() {
         if (_totalPlayers.value == 11) {
             _playersByRating.value?.let {
                 _teamRating.value = calculateSquadRating(it)
@@ -71,7 +80,6 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         } else {
             _teamRating.value = null
         }
-
     }
 
     fun clearData() {

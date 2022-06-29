@@ -15,7 +15,7 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     private val playerRatingRepository: PlayerRatingRepository
 ) : ViewModel() {
 
-    private val _playersByRating = MutableLiveData<List<PlayerRating>>()
+    private val _playersByRating = MutableLiveData<List<PlayerRating>?>()
     val playersByRating: LiveData<List<PlayerRating>?> = _playersByRating
 
     private val _totalPlayers = MutableLiveData<Int>()

@@ -1,15 +1,28 @@
 package com.guilhermealbm.sbcratingcalculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil.setContentView
-import com.guilhermealbm.sbcratingcalculator.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import com.guilhermealbm.sbcratingcalculator.viewmodels.SBCRatingCalculatorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
+
+    private val viewModel: SBCRatingCalculatorViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        setContent {
+            SBCRatingCalculatorApp()
+        }
+    }
+
+    override fun onStop() {
+        viewModel.playersByRating.value?.let {
+            viewModel.savePlayersRatingDb(it)
+        }
+        super.onStop()
     }
 }

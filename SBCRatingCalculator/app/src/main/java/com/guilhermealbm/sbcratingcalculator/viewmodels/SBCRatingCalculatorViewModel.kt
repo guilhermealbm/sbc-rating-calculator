@@ -4,10 +4,9 @@ import androidx.lifecycle.*
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.model.createRatings
 import com.guilhermealbm.sbcratingcalculator.repository.PlayerRatingRepository
-import com.guilhermealbm.sbcratingcalculator.util.MISSING_PLAYERS
-import com.guilhermealbm.sbcratingcalculator.util.TOO_MANY_PLAYERS
 import com.guilhermealbm.sbcratingcalculator.util.calculateSquadRating
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,7 +15,30 @@ class SBCRatingCalculatorViewModel @Inject constructor (
     private val playerRatingRepository: PlayerRatingRepository
 ) : ViewModel() {
 
-    val playersByRating = playerRatingRepository.getPlayersRating().asLiveData()
+    private val _playersByRating = MutableLiveData<List<PlayerRating>?>()
+    val playersByRating: LiveData<List<PlayerRating>?> = _playersByRating
+
+    private val _totalPlayers = MutableLiveData<Int>()
+    val totalPlayers: LiveData<Int> = _totalPlayers
+
+    private val _teamRating = MutableLiveData<Int?>()
+    val teamRating: LiveData<Int?> = _teamRating
+
+    init {
+        viewModelScope.launch {
+            _playersByRating.value = playerRatingRepository.getPlayersRating().first()
+            if (_playersByRating.value?.isEmpty() == true)
+                _playersByRating.value = createRatings().toList()
+
+            _totalPlayers.value = _playersByRating.value?.sumOf { it.players }
+
+            if (_totalPlayers.value == 11) {
+                _playersByRating.value?.let {
+                    _teamRating.value = calculateSquadRating(it)
+                }
+            }
+        }
+    }
 
     fun savePlayersRatingDb(playerRatings: List<PlayerRating>) {
         viewModelScope.launch {
@@ -24,15 +46,46 @@ class SBCRatingCalculatorViewModel @Inject constructor (
         }
     }
 
-    fun getSquadRating(players: List<PlayerRating>) : Int {
-        val playersNum = players.map { p -> p.players }.sum()
-        return when {
-            playersNum < 11 -> MISSING_PLAYERS
-            playersNum == 11 -> calculateSquadRating(players)
-            else -> TOO_MANY_PLAYERS
+    fun updatePlayerInList(playerRating: PlayerRating, add: Boolean) {
+        val index = _playersByRating.value?.indexOf(playerRating) ?: 0
+        if (!add && playerRating.players == 0)
+            return
+
+        val newPlayerRating: PlayerRating = if (add)
+            PlayerRating(playerRating.rating, playerRating.players + 1)
+        else
+            PlayerRating(playerRating.rating, playerRating.players - 1)
+
+        updateTotalPlayers(add)
+
+        val newList = _playersByRating.value?.toMutableList()
+        newList?.set(index, newPlayerRating)
+        _playersByRating.value = newList
+
+        updateTeamRating()
+    }
+
+    private fun updateTotalPlayers(add: Boolean) {
+        _totalPlayers.value = if (add)
+            _totalPlayers.value?.plus(1)
+        else
+            _totalPlayers.value?.minus(1)
+    }
+
+    private fun updateTeamRating() {
+        if (_totalPlayers.value == 11) {
+            _playersByRating.value?.let {
+                _teamRating.value = calculateSquadRating(it)
+            }
+        } else {
+            _teamRating.value = null
         }
     }
 
-    fun clearData() = savePlayersRatingDb(createRatings().toList())
+    fun clearData() {
+        _playersByRating.value = createRatings().toList()
+        _totalPlayers.value = 0
+        _teamRating.value = null
+    }
 
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SBCRatingCalculator</string>
+    <string name="heading">Calculadora de classificação de DME</string>
+    <string name="result_message">A classificação do seu DME é: %1$d.</string>
+    <string name="added_players">%1$d jogadores adicionados</string>
+    <string name="clear">Limpar dados</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.guilhermealbm.sbcratingcalculator.ui
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -20,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guilhermealbm.sbcratingcalculator.R
 import com.guilhermealbm.sbcratingcalculator.model.PlayerRating
 import com.guilhermealbm.sbcratingcalculator.model.createRatings
+import com.guilhermealbm.sbcratingcalculator.theme.SBCRatingCalculatorTheme
 import com.guilhermealbm.sbcratingcalculator.viewmodels.SBCRatingCalculatorViewModel
 
 @Composable
@@ -158,29 +160,39 @@ fun SBCRatingCalculatorInfo(
     }
 }
 
-@Preview(name = "SBCRatingCalculator")
+@Preview
+@Preview(
+    name = "SBCRatingCalculator",
+    uiMode = UI_MODE_NIGHT_YES
+)
 @Composable
 private fun SBCRatingCalculatorPreview() {
-    SBCRatingCalculatorScreen(createRatings().toList(), 11, 82, {}, {}, {})
+    SBCRatingCalculatorTheme {
+        SBCRatingCalculatorScreen(createRatings().toList(), 11, 82, {}, {}, {})
+    }
 }
 
 @Preview(name = "SBCRatingCalculatorList")
 @Composable
 private fun SBCRatingCalculatorListPreview() {
-    SBCRatingCalculatorList(createRatings().toList(), {}, {})
+    SBCRatingCalculatorTheme {
+        SBCRatingCalculatorList(createRatings().toList(), {}, {})
+    }
 }
 
 @Preview(name = "SBCRatingCalculatorInfo")
 @Composable
 private fun SBCRatingCalculatorInfoPreview() {
-    SBCRatingCalculatorInfo(11, 82) {}
+    SBCRatingCalculatorTheme {
+        SBCRatingCalculatorInfo(11, 82) {}
+    }
 }
 
 @Preview(name = "PlayerRatingSelector")
 @Composable
 private fun PlayerRatingSelectorPreview() {
     val playerRating = PlayerRating(80, 1)
-    Surface {
+    SBCRatingCalculatorTheme {
         PlayerRatingSelector(playerRating, {}, {})
     }
 }

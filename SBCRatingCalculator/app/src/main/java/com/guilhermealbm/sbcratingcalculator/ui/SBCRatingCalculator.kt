@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -52,38 +54,48 @@ fun SBCRatingCalculatorScreen(
     onClearData: () -> Unit
 ) {
     Scaffold {
-        Column (
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            val configuration = LocalConfiguration.current
-            val cells = when (configuration.orientation) {
-                Configuration.ORIENTATION_LANDSCAPE -> 5
-                else -> 10
-            }
-            val marginBottom = when (configuration.orientation) {
-                Configuration.ORIENTATION_LANDSCAPE -> 20.dp
-                else -> 40.dp
-            }
-            SBCRatingCalculatorHeader()
-            Row(
-                modifier = Modifier.weight(1f)
+        playerRatingsList?.let {
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SBCRatingCalculatorList(
-                    playerRatingsList = playerRatingsList,
-                    onRemovePlayer = onRemovePlayer,
-                    onAddPlayer = onAddPlayer,
-                    cells = cells
+                val configuration = LocalConfiguration.current
+                val cells = when (configuration.orientation) {
+                    Configuration.ORIENTATION_LANDSCAPE -> 5
+                    else -> 10
+                }
+                val marginBottom = when (configuration.orientation) {
+                    Configuration.ORIENTATION_LANDSCAPE -> 20.dp
+                    else -> 40.dp
+                }
+                SBCRatingCalculatorHeader()
+                Row(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    SBCRatingCalculatorList(
+                        playerRatingsList = it,
+                        onRemovePlayer = onRemovePlayer,
+                        onAddPlayer = onAddPlayer,
+                        cells = cells
+                    )
+                }
+                SBCRatingCalculatorInfo(
+                    totalPlayers = totalPlayers,
+                    teamRating = teamRating,
+                    onClearData = onClearData,
+                    marginBottom = marginBottom
                 )
             }
-            SBCRatingCalculatorInfo(
-                totalPlayers = totalPlayers,
-                teamRating = teamRating,
-                onClearData = onClearData,
-                marginBottom = marginBottom
-            )
+        } ?: run {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }
@@ -99,7 +111,7 @@ fun SBCRatingCalculatorHeader() {
 
 @Composable
 fun SBCRatingCalculatorList(
-    playerRatingsList: List<PlayerRating>?,
+    playerRatingsList: List<PlayerRating>,
     onRemovePlayer: (PlayerRating) -> Unit,
     onAddPlayer: (PlayerRating) -> Unit,
     cells: Int,
@@ -109,14 +121,12 @@ fun SBCRatingCalculatorList(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         userScrollEnabled = false
     ) {
-        playerRatingsList?.let {
-            items(it) { playerRating ->
-                PlayerRatingSelector(
-                    playerRating = playerRating,
-                    onRemovePlayer = onRemovePlayer,
-                    onAddPlayer = onAddPlayer
-                )
-            }
+        items(playerRatingsList) { playerRating ->
+            PlayerRatingSelector(
+                playerRating = playerRating,
+                onRemovePlayer = onRemovePlayer,
+                onAddPlayer = onAddPlayer
+            )
         }
     }
 }
@@ -176,15 +186,23 @@ fun SBCRatingCalculatorInfo(
     }
 }
 
-@Preview
+@Preview(name = "SBCRatingCalculatorLight")
 @Preview(
-    name = "SBCRatingCalculator",
+    name = "SBCRatingCalculatorDark",
     uiMode = UI_MODE_NIGHT_YES
 )
 @Composable
 private fun SBCRatingCalculatorPreview() {
     SBCRatingCalculatorTheme {
         SBCRatingCalculatorScreen(createRatings().toList(), 11, 82, {}, {}, {})
+    }
+}
+
+@Preview(name = "SBCRatingCalculatorLoading")
+@Composable
+private fun SBCRatingCalculatorLoadingPreview() {
+    SBCRatingCalculatorTheme {
+        SBCRatingCalculatorScreen(null, null, null, {}, {}, {})
     }
 }
 

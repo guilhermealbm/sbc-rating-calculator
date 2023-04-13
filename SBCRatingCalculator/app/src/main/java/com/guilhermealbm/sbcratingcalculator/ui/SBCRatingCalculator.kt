@@ -53,7 +53,16 @@ fun SBCRatingCalculatorScreen(
     onAddPlayer: (PlayerRating) -> Unit,
     onClearData: () -> Unit
 ) {
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.heading))
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
+        }
+    ) { _ ->
         playerRatingsList?.let {
             Column(
                 modifier = Modifier
@@ -70,7 +79,6 @@ fun SBCRatingCalculatorScreen(
                     Configuration.ORIENTATION_LANDSCAPE -> 20.dp
                     else -> 40.dp
                 }
-                SBCRatingCalculatorHeader()
                 Row(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -98,15 +106,6 @@ fun SBCRatingCalculatorScreen(
             }
         }
     }
-}
-
-@Composable
-fun SBCRatingCalculatorHeader() {
-    Text(
-        text = stringResource(id = R.string.heading),
-        style = MaterialTheme.typography.h6,
-        modifier = Modifier.padding(16.dp)
-    )
 }
 
 @Composable
